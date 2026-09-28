@@ -1,7 +1,6 @@
 import React from 'react';
 import Sidebar from '../Sidebar/Sidebar';
 import Header from '../Header/Header';
-import './MainLayout.css';
 
 interface MainLayoutProps {
   title?: string;
