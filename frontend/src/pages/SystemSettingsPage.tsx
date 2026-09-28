@@ -1,5 +1,5 @@
 import React from 'react';
-import MainLayout from '../layout/MainLayout';
+import MainLayout from '../layout/MainLayout/MainLayout';
 import SystemSettings from '../components/SystemSettings/SystemSettings';
 
 export const SystemSettingsPage: React.FC = () => {
