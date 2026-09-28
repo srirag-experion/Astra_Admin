@@ -1,20 +1,19 @@
 import React from 'react';
-import Sidebar from './components/Sidebar/Sidebar';
-import Header from './components/Header/Header';
-import './MainLayout.css';
+import Sidebar from './Sidebar';
+import Header from './Header';
 
 interface MainLayoutProps {
   title?: string;
   children: React.ReactNode;
 }
 
-export const MainLayout: React.FC<MainLayoutProps> = ({ title = 'Astra Admin', children }) => {
+export const MainLayout: React.FC<MainLayoutProps> = ({ title = 'System Settings', children }) => {
   return (
-    <div className="app-container">
+    <div className="flex min-h-screen bg-[#f8fafc] text-slate-800 font-sans w-full">
       <Sidebar />
-      <div className="main-wrapper">
+      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         <Header title={title} />
-        <main className="content-body">{children}</main>
+        <main className="flex-1 p-6 lg:p-8 max-w-7xl w-full mx-auto">{children}</main>
       </div>
     </div>
   );
