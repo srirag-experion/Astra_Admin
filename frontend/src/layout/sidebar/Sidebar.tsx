@@ -2,9 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard,
-  PlusSquare,
-  HelpCircle,
-  ShieldCheck
+  HelpCircle
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
@@ -43,22 +41,6 @@ export const Sidebar: React.FC = () => {
           </div>
         </NavLink>
 
-        <NavLink
-          to="/add-product"
-          className={({ isActive }) =>
-            `w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs font-medium transition-all ${
-              isActive
-                ? 'bg-[#edf8c7] text-slate-900 font-semibold shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-            }`
-          }
-        >
-          <div className="flex items-center space-x-3">
-            <PlusSquare size={16} className="text-[#84cc16]" />
-            <span>Add Product</span>
-          </div>
-        </NavLink>
-
         <div className="pt-3 mt-3 border-t border-slate-100 space-y-1">
           <button
             type="button"
@@ -68,31 +50,6 @@ export const Sidebar: React.FC = () => {
             <span>Help Center & Docs</span>
           </button>
         </div>
-      </div>
-
-      {/* Footer Profile Status */}
-      <div className="p-3.5 border-t border-slate-100 flex items-center justify-between bg-slate-50/50">
-        <div className="flex items-center space-x-2.5 truncate">
-          <div className="relative shrink-0">
-            <div className="h-8 w-8 rounded-full bg-slate-800 text-white font-bold flex items-center justify-center text-xs overflow-hidden">
-              <span>AB</span>
-            </div>
-            <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-[#84cc16] ring-2 ring-white" />
-          </div>
-
-          <div className="truncate">
-            <div className="text-xs font-bold text-slate-800 truncate">Admin Console</div>
-            <div className="text-[10px] text-slate-500 truncate">Node.js Express API</div>
-          </div>
-        </div>
-
-        <button
-          type="button"
-          className="p-1.5 text-slate-400 hover:text-slate-700 rounded-md hover:bg-slate-100 transition"
-          title="Status"
-        >
-          <ShieldCheck size={14} className="text-[#84cc16]" />
-        </button>
       </div>
     </aside>
   );
