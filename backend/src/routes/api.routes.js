@@ -1,5 +1,6 @@
 import express from 'express';
 import { getDashboardStats, getUsers } from '../controllers/adminController.js';
+import { getLLMConfig, saveLLMConfig, testLLMConnection } from '../controllers/llmConfigController.js';
 
 const router = express.Router();
 
@@ -16,4 +17,10 @@ router.get('/health', (req, res) => {
 router.get('/dashboard/stats', getDashboardStats);
 router.get('/users', getUsers);
 
+// LLM Provider Configuration Endpoints
+router.get('/config/llm', getLLMConfig);
+router.post('/config/llm', saveLLMConfig);
+router.post('/config/llm/test', testLLMConnection);
+
 export default router;
+

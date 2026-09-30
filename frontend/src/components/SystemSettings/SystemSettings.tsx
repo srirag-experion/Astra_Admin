@@ -1,41 +1,44 @@
 import React, { useState } from 'react';
-import { Brain, Database, GitBranch, FlaskConical, Ticket, Bot, MessageSquare, RefreshCw, Zap, ArrowUpRight } from 'lucide-react';
+import { Brain, Database, GitBranch, FlaskConical, Ticket, Bot, MessageSquare, RefreshCw, Zap, CheckCircle2, ChevronRight } from 'lucide-react';
 import FormField from '../common/FormField/FormField';
+import LLMConfigSection from '../LLMConfig/LLMConfigSection';
 import './SystemSettings.css';
 
 export const SystemSettings: React.FC = () => {
   const [projectKey, setProjectKey] = useState<string>('ASTRA-CORE');
   const [projectName, setProjectName] = useState<string>('Astra Admin Suite');
   const [organization, setOrganization] = useState<string>('Experion Tenant');
+  const [activeStep, setActiveStep] = useState<number>(1);
 
-  const serviceCards = [
-    { id: 'llm', title: 'LLM Model Providers', provider: 'OPENAI', details: 'gpt-4o-mini', icon: Brain, connectedDate: 'Connected: Today' },
-    { id: 'rag', title: 'Knowledge Base & Vector Store', provider: 'PINECONE', details: '1024 tokens • OpenAI Embeddings', icon: Database, connectedDate: 'Connected: Active' },
-    { id: 'source_control', title: 'Source Code Connections', provider: 'GITHUB', details: 'astra-org/admin-repo', icon: GitBranch, connectedDate: 'Connected: Synced' },
-    { id: 'test_runner', title: 'Automated QA & Test Runners', provider: 'PLAYWRIGHT', details: 'Framework: PLAYWRIGHT', icon: FlaskConical, connectedDate: 'Configured' },
-    { id: 'ticketing', title: 'Issue & Ticket Workflows', provider: 'JIRA', details: 'Project Key: JIRA-PROD', icon: Ticket, connectedDate: 'Bi-directional' },
-    { id: 'goose', title: 'Autonomous Coding Agents', provider: 'AUTONOMOUS', details: 'claude-3-5-sonnet • Docker Sandbox', icon: Bot, connectedDate: 'Ready' },
-    { id: 'integrations', title: 'Connected APIs & Slack', provider: 'SLACK ACTIVE', details: '#alerts-production', icon: MessageSquare, connectedDate: 'Webhook Active' },
+  const steps = [
+    { id: 1, title: 'LLM Model', icon: Brain },
+    { id: 2, title: 'Jira / Tickets', icon: Ticket },
+    { id: 3, title: 'Source Control', icon: GitBranch },
+    { id: 4, title: 'RAG & Vector DB', icon: Database },
+    { id: 5, title: 'Test Runner', icon: FlaskConical },
+    { id: 6, title: 'Goose Agent', icon: Bot },
+    { id: 7, title: 'Notifications', icon: MessageSquare },
   ];
 
   const handleReset = () => {
     setProjectKey('ASTRA-CORE');
     setProjectName('Astra Admin Suite');
     setOrganization('Experion Tenant');
+    setActiveStep(1);
   };
 
   return (
-    <div className="system-settings-container">
+    <div className="system-settings-container space-y-6">
       {/* Header */}
       <div className="section-header-row">
         <div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a' }}>System Settings</h2>
-          <p style={{ fontSize: '0.8rem', color: '#64748b' }}>Setup and edit system settings, AI providers, and project preferences</p>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#0f172a' }}>System Setup Wizard</h2>
+          <p style={{ fontSize: '0.8rem', color: '#64748b' }}>Configure your AI pipeline, platform integrations, and developer toolchains step-by-step</p>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <button type="button" onClick={handleReset} className="btn-reset">
             <RefreshCw size={13} />
-            <span>Reset</span>
+            <span>Reset Setup</span>
           </button>
           <button type="button" className="btn-lime">
             <Zap size={13} />
@@ -44,11 +47,74 @@ export const SystemSettings: React.FC = () => {
         </div>
       </div>
 
+      {/* SonarQube Style Wizard Stepper Header */}
+      <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs">
+        <div className="flex items-center justify-between overflow-x-auto gap-2 pb-2">
+          {steps.map((step, idx) => {
+            const Icon = step.icon;
+            const isActive = activeStep === step.id;
+            const isDone = activeStep > step.id;
+
+            return (
+              <React.Fragment key={step.id}>
+                <button
+                  type="button"
+                  onClick={() => setActiveStep(step.id)}
+                  className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-xs font-bold transition-all shrink-0 ${
+                    isActive
+                      ? 'bg-[#edf8c7] text-[#4d7c0f] border border-[#84cc16]/50 shadow-xs ring-2 ring-[#84cc16]/20'
+                      : isDone
+                      ? 'bg-slate-100 text-slate-800 hover:bg-slate-200'
+                      : 'bg-slate-50 text-slate-400 hover:text-slate-600'
+                  }`}
+                >
+                  <div className={`p-1.5 rounded-md ${
+                    isActive ? 'bg-[#84cc16] text-slate-900' : isDone ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-500'
+                  }`}>
+                    {isDone ? <CheckCircle2 size={13} /> : <Icon size={13} />}
+                  </div>
+                  <span>Step {step.id}: {step.title}</span>
+                </button>
+                {idx < steps.length - 1 && (
+                  <ChevronRight size={14} className="text-slate-300 shrink-0" />
+                )}
+              </React.Fragment>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Active Step Container */}
+      {activeStep === 1 && (
+        <LLMConfigSection onNextStep={() => setActiveStep(2)} />
+      )}
+
+      {activeStep > 1 && (
+        <div className="bg-white rounded-xl border border-slate-200 p-8 text-center max-w-4xl">
+          <div className="inline-flex p-4 bg-lime-100 text-lime-700 rounded-full mb-3">
+            {React.createElement(steps[activeStep - 1].icon, { size: 24 })}
+          </div>
+          <h3 className="text-base font-bold text-slate-900">
+            Step {activeStep}: {steps[activeStep - 1].title} Configuration
+          </h3>
+          <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
+            This module is queued for Step {activeStep}. Complete Step 1 (LLM Foundation) or navigate back using the stepper above.
+          </p>
+          <button
+            type="button"
+            onClick={() => setActiveStep(1)}
+            className="mt-4 px-4 py-2 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition"
+          >
+            ← Back to Step 1 (LLM Provider)
+          </button>
+        </div>
+      )}
+
       {/* General Information Card */}
       <div className="general-info-card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', paddingBottom: '0.75rem', borderBottom: '1px solid #f1f5f9' }}>
           <div>
-            <h3 style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0f172a' }}>General Information</h3>
+            <h3 style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0f172a' }}>Project Identity Information</h3>
             <p style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Core identity parameters for this project configuration</p>
           </div>
           <span className="key-badge">{projectKey || 'ASTRA'}</span>
@@ -83,44 +149,9 @@ export const SystemSettings: React.FC = () => {
           </FormField>
         </div>
       </div>
-
-      {/* Connected Services Grid */}
-      <div>
-        <h3 style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0f172a', marginBottom: '0.25rem' }}>Connected Services & Modules</h3>
-        <p style={{ fontSize: '0.75rem', color: '#94a3b8', marginBottom: '1rem' }}>Click any card to edit its underlying parameters</p>
-
-        <div className="services-grid">
-          {serviceCards.map((card) => {
-            const Icon = card.icon;
-            return (
-              <div key={card.id} className="service-card">
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                    <div style={{ padding: '0.5rem', borderRadius: '10px', background: '#edf8c7', color: '#65a30d' }}>
-                      <Icon size={18} />
-                    </div>
-                    <div>
-                      <h4 style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0f172a' }}>{card.title}</h4>
-                      <span style={{ fontSize: '0.7rem', color: '#94a3b8' }}>{card.connectedDate}</span>
-                    </div>
-                  </div>
-
-                  <p style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: '#334155', background: '#f8fafc', padding: '0.5rem 0.75rem', borderRadius: '6px', border: '1px solid #f1f5f9' }}>
-                    {card.details}
-                  </p>
-                </div>
-
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem', paddingTop: '0.75rem', borderTop: '1px solid #f1f5f9', fontSize: '0.75rem', fontWeight: 700, color: '#65a30d' }}>
-                  <span>Edit Settings</span>
-                  <ArrowUpRight size={14} />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
     </div>
   );
 };
 
 export default SystemSettings;
+
